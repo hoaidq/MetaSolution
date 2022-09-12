@@ -26,9 +26,9 @@ namespace MetaSolution.Data.Configurations
 
             builder.Property(x => x.MetaDescription).HasMaxLength(256);
 
-            builder.Property(x => x.LanguageId).IsRequired().IsUnicode(false).HasMaxLength(5);
+            builder.Property(x => x.LanguageCode).IsRequired().IsUnicode(false).HasMaxLength(5);
 
-            builder.HasOne(x => x.Language).WithMany(x => x.ProductLanguages).HasForeignKey(x => x.LanguageId);
+            builder.HasOne(x => x.Language).WithMany(x => x.ProductLanguages).HasForeignKey(x => x.LanguageCode);
 
             builder.HasOne(x => x.Product).WithMany(x => x.ProductLanguages).HasForeignKey(x => x.ProductId);
         }

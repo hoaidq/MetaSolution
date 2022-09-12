@@ -14,5 +14,6 @@ namespace MetaSolution.Data.Entities
         public bool IsDefault { get; set; }
         public List<ProductLanguage>? ProductLanguages { get; set; }
         public List<CatalogLanguage>? CatalogLanguages { get; set; }
+        public List<AttributeValueLanguage>? AttributeValueLanguages { get; set; }
     }
 }

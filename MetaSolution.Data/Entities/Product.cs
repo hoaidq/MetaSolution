@@ -21,5 +21,7 @@ namespace MetaSolution.Data.Entities
         public List<OrderDetail>? OrderDetails { get; set; }
         public List<ProductMedia>? ProductMedias { get; set; }
         public List<ProductLanguage>? ProductLanguages { get; set; }
+        public List<AttributeValueInProduct>? AttributeValueInProducts { get; set; }
+        public List<Cart>? Carts { get; set; }
     }
 }

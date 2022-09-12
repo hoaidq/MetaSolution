@@ -18,6 +18,7 @@ namespace MetaSolution.Data.Configurations
             builder.HasKey(x => new { x.CatalogId, x.ProductId });
 
             builder.HasOne(x => x.Product).WithMany(x => x.ProductInCatalogs).HasForeignKey(x => x.ProductId);
+
             builder.HasOne(x => x.Catalog).WithMany(x => x.ProductInCatalogs).HasForeignKey(x => x.CatalogId);
         }
     }

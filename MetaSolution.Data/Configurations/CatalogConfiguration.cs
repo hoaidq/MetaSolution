@@ -15,7 +15,7 @@ namespace MetaSolution.Data.Configurations
 
             builder.Property(x => x.Id).UseIdentityColumn();
 
-            builder.Property(x => x.ParentId).HasDefaultValue(0);
+            builder.Property(x => x.ParentId).HasDefaultValue(null);
 
             builder.Property(x => x.SortOrder).HasDefaultValue(1);
 

@@ -16,7 +16,7 @@ namespace MetaSolution.Data.Entities
         public string? MetaKeywords { get; set; }
         public string? MetaDescription { get; set; }
         public int ProductId { get; set; }
-        public string? LanguageId { get; set; }
+        public string? LanguageCode { get; set; }
         public Product? Product { get; set; }
         public Language? Language { get; set; }
 
