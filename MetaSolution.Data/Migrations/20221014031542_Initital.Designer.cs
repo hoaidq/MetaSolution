@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MetaSolution.Data.Migrations
 {
     [DbContext(typeof(MetaDbContext))]
-    [Migration("20220909070715_Initial")]
-    partial class Initial
+    [Migration("20221014031542_Initital")]
+    partial class Initital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -129,6 +129,9 @@ namespace MetaSolution.Data.Migrations
                     b.Property<int>("AttributeValueId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LanguageCode")
                         .IsRequired()
                         .HasMaxLength(5)
@@ -146,7 +149,7 @@ namespace MetaSolution.Data.Migrations
 
                     b.HasIndex("LanguageCode");
 
-                    b.ToTable("AttributeValueLanguage", (string)null);
+                    b.ToTable("AttributeValueLanguages", (string)null);
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.Cart", b =>
@@ -189,10 +192,11 @@ namespace MetaSolution.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ParentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                    b.Property<bool>("IsShowOnHome")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SortOrder")
                         .ValueGeneratedOnAdd()
@@ -207,6 +211,22 @@ namespace MetaSolution.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Catalogs", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsShowOnHome = true,
+                            SortOrder = 1,
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsShowOnHome = true,
+                            SortOrder = 1,
+                            Status = 1
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.CatalogLanguage", b =>
@@ -225,6 +245,9 @@ namespace MetaSolution.Data.Migrations
                         .HasMaxLength(5)
                         .IsUnicode(false)
                         .HasColumnType("varchar(5)");
+
+                    b.Property<string>("MetaAlias")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MetaDescription")
                         .HasMaxLength(256)
@@ -251,6 +274,94 @@ namespace MetaSolution.Data.Migrations
                     b.HasIndex("LanguageCode");
 
                     b.ToTable("CatalogLanguages", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CatalogId = 1,
+                            LanguageCode = "vi-VN",
+                            MetaAlias = "dien-thoai",
+                            MetaDescription = "Điện thoại di động",
+                            MetaKeywords = "điện thoại, điện thoại di động",
+                            Title = "Điện thoại",
+                            TitleSite = "Điện thoại di động"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CatalogId = 1,
+                            LanguageCode = "en-US",
+                            MetaAlias = "mobile-phone",
+                            MetaDescription = "mobile phone",
+                            MetaKeywords = "mobile phone",
+                            Title = "Phone",
+                            TitleSite = "Mobile phone"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CatalogId = 2,
+                            LanguageCode = "vi-VN",
+                            MetaAlias = "phu-kien",
+                            MetaDescription = "phụ kiện di động",
+                            MetaKeywords = "phụ kiện, phụ kiện di động",
+                            Title = "Phụ kiện",
+                            TitleSite = "Phụ kiện di động"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CatalogId = 2,
+                            LanguageCode = "en-US",
+                            MetaAlias = "mobile-accessory",
+                            MetaDescription = "mobile accessory",
+                            MetaKeywords = "mobile accessory",
+                            Title = "Accessory",
+                            TitleSite = "Mobile accessory"
+                        });
+                });
+
+            modelBuilder.Entity("MetaSolution.Data.Entities.Config", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Configs", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Key = "HomeTitle",
+                            Value = "This is homepage of Meta Solution"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Key = "HomeKeyword",
+                            Value = "This is keyword of Meta Solution"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Key = "HomeDescription",
+                            Value = "This is description of Meta Solution"
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.Language", b =>
@@ -275,6 +386,20 @@ namespace MetaSolution.Data.Migrations
                     b.HasKey("Code");
 
                     b.ToTable("Languages", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Code = "vi-VN",
+                            IsDefault = false,
+                            Name = "Tiếng Việt"
+                        },
+                        new
+                        {
+                            Code = "en-US",
+                            IsDefault = false,
+                            Name = "English"
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.Module", b =>
@@ -291,11 +416,55 @@ namespace MetaSolution.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(64)");
 
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Modules", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "groups",
+                            Level = 1,
+                            Order = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "users",
+                            Level = 1,
+                            Order = 2
+                        });
+                });
+
+            modelBuilder.Entity("MetaSolution.Data.Entities.ModuleLanguage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<string>("Description")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("Level")
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(5)");
+
+                    b.Property<int>("ModuleId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -303,15 +472,47 @@ namespace MetaSolution.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Modules", (string)null);
+                    b.HasIndex("LanguageCode");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleLanguages", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "",
+                            LanguageCode = "vi-VN",
+                            ModuleId = 1,
+                            Name = "Quản lý nhóm"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "",
+                            LanguageCode = "en-US",
+                            ModuleId = 1,
+                            Name = "Group manager"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "",
+                            LanguageCode = "vi-VN",
+                            ModuleId = 2,
+                            Name = "Quản lý thành viên"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "",
+                            LanguageCode = "en-US",
+                            ModuleId = 2,
+                            Name = "Member manager"
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.Order", b =>
@@ -325,7 +526,7 @@ namespace MetaSolution.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 9, 9, 7, 7, 14, 982, DateTimeKind.Utc).AddTicks(5045));
+                        .HasDefaultValue(new DateTime(2022, 10, 14, 3, 15, 42, 262, DateTimeKind.Utc).AddTicks(2588));
 
                     b.Property<string>("ShipAddress")
                         .IsRequired()
@@ -412,24 +613,13 @@ namespace MetaSolution.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CatalogId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 9, 9, 7, 7, 14, 981, DateTimeKind.Utc).AddTicks(3870));
+                        .HasDefaultValue(new DateTime(2022, 10, 14, 3, 15, 42, 261, DateTimeKind.Utc).AddTicks(1855));
 
                     b.Property<DateTime>("DateModified")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Image")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("ImageThumb")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -442,11 +632,13 @@ namespace MetaSolution.Data.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.Property<int>("UserCreated")
-                        .HasColumnType("int");
+                    b.Property<string>("UserCreated")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
-                    b.Property<int>("UserModified")
-                        .HasColumnType("int");
+                    b.Property<string>("UserModified")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
@@ -457,6 +649,20 @@ namespace MetaSolution.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateCreated = new DateTime(2022, 10, 14, 3, 15, 42, 273, DateTimeKind.Utc).AddTicks(2888),
+                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Price = 12000000m,
+                            PromotionPrice = 10500000m,
+                            Status = 0,
+                            UserCreated = "admin (hoaidq@gmail.com)",
+                            ViewCount = 0,
+                            Warranty = 12
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.ProductInCatalog", b =>
@@ -472,6 +678,13 @@ namespace MetaSolution.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductInCatalogs", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CatalogId = 1,
+                            ProductId = 1
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.ProductLanguage", b =>
@@ -523,6 +736,32 @@ namespace MetaSolution.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductLanguages", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "",
+                            Description = "",
+                            LanguageCode = "vi-VN",
+                            MetaDescription = "",
+                            MetaKeywords = "Điện thoại iPhone XS Max 64GB",
+                            ProductId = 1,
+                            Title = "Điện thoại iPhone XS Max 64GB",
+                            TitleSite = "Điện thoại iPhone XS Max 64GB"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "",
+                            Description = "",
+                            LanguageCode = "en-US",
+                            MetaDescription = "",
+                            MetaKeywords = "iPhone XS Max 64GB",
+                            ProductId = 1,
+                            Title = "iPhone XS Max 64GB",
+                            TitleSite = "iPhone XS Max 64GB"
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.ProductMedia", b =>
@@ -536,7 +775,7 @@ namespace MetaSolution.Data.Migrations
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 9, 9, 7, 7, 14, 982, DateTimeKind.Utc).AddTicks(3306));
+                        .HasDefaultValue(new DateTime(2022, 10, 14, 3, 15, 42, 262, DateTimeKind.Utc).AddTicks(1073));
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
@@ -593,6 +832,16 @@ namespace MetaSolution.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("75f218bb-7f54-4276-83d2-61a97077f66b"),
+                            ConcurrencyStamp = "597437f0-a9a2-40db-840c-dc571d0f1eb5",
+                            Description = "Administrator Role",
+                            Name = "Administrator",
+                            NormalizedName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.User", b =>
@@ -659,6 +908,26 @@ namespace MetaSolution.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6ebfc0b1-b951-4a1d-8b76-8acbe45ecd0e"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b389861d-77da-4eb4-82a5-97cfe1d401e7",
+                            Dob = new DateTime(1981, 2, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "hoaidq@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Hoai",
+                            LastName = "Dương",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "hoaidq@gmail.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDsPtg392iG8vJfkVYryhQ0Karw+k8VZWyqLiLQFZwi+GBuHVqJ1zF8YS9Mulehj9g==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.UserInRole", b =>
@@ -674,6 +943,13 @@ namespace MetaSolution.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserInRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("6ebfc0b1-b951-4a1d-8b76-8acbe45ecd0e"),
+                            RoleId = new Guid("75f218bb-7f54-4276-83d2-61a97077f66b")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -866,13 +1142,34 @@ namespace MetaSolution.Data.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("MetaSolution.Data.Entities.ModuleLanguage", b =>
+                {
+                    b.HasOne("MetaSolution.Data.Entities.Language", "Language")
+                        .WithMany("ModuleLanguages")
+                        .HasForeignKey("LanguageCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MetaSolution.Data.Entities.Module", "Module")
+                        .WithMany("ModuleLanguages")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Module");
+                });
+
             modelBuilder.Entity("MetaSolution.Data.Entities.Order", b =>
                 {
-                    b.HasOne("MetaSolution.Data.Entities.User", null)
+                    b.HasOne("MetaSolution.Data.Entities.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.OrderDetail", b =>
@@ -1021,12 +1318,16 @@ namespace MetaSolution.Data.Migrations
 
                     b.Navigation("CatalogLanguages");
 
+                    b.Navigation("ModuleLanguages");
+
                     b.Navigation("ProductLanguages");
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.Module", b =>
                 {
                     b.Navigation("ActionInModules");
+
+                    b.Navigation("ModuleLanguages");
 
                     b.Navigation("Permissions");
                 });

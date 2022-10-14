@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MetaSolution.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initital : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,13 +43,28 @@ namespace MetaSolution.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ParentId = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    IsShowOnHome = table.Column<bool>(type: "bit", nullable: false),
                     SortOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Catalogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Configs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Key = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Configs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,12 +87,10 @@ namespace MetaSolution.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Code = table.Column<string>(type: "varchar(64)", unicode: false, maxLength: 64, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Level = table.Column<int>(type: "int", nullable: false),
                     Order = table.Column<int>(type: "int", nullable: false),
-                    ParentId = table.Column<int>(type: "int", nullable: false)
+                    ParentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -92,16 +105,13 @@ namespace MetaSolution.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PromotionPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    ImageThumb = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     ViewCount = table.Column<int>(type: "int", nullable: false),
                     Warranty = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 9, 9, 7, 7, 14, 981, DateTimeKind.Utc).AddTicks(3870)),
-                    UserCreated = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 10, 14, 3, 15, 42, 261, DateTimeKind.Utc).AddTicks(1855)),
+                    UserCreated = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     DateModified = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserModified = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                    CatalogId = table.Column<int>(type: "int", nullable: false)
+                    UserModified = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
@@ -238,6 +248,7 @@ namespace MetaSolution.Data.Migrations
                     TitleSite = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     MetaKeywords = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
                     MetaDescription = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    MetaAlias = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LanguageCode = table.Column<string>(type: "varchar(5)", unicode: false, maxLength: 5, nullable: false),
                     CatalogId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -276,6 +287,34 @@ namespace MetaSolution.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ActionInModules_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModuleLanguages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    LanguageCode = table.Column<string>(type: "varchar(5)", unicode: false, maxLength: 5, nullable: false),
+                    ModuleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModuleLanguages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ModuleLanguages_Languages_LanguageCode",
+                        column: x => x.LanguageCode,
+                        principalTable: "Languages",
+                        principalColumn: "Code",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ModuleLanguages_Modules_ModuleId",
                         column: x => x.ModuleId,
                         principalTable: "Modules",
                         principalColumn: "Id",
@@ -348,7 +387,7 @@ namespace MetaSolution.Data.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     Path = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     IsDefault = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 9, 9, 7, 7, 14, 982, DateTimeKind.Utc).AddTicks(3306)),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 10, 14, 3, 15, 42, 262, DateTimeKind.Utc).AddTicks(1073)),
                     SortOrder = table.Column<int>(type: "int", nullable: false),
                     FileSize = table.Column<long>(type: "bigint", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false)
@@ -430,7 +469,7 @@ namespace MetaSolution.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 9, 9, 7, 7, 14, 982, DateTimeKind.Utc).AddTicks(5045)),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 10, 14, 3, 15, 42, 262, DateTimeKind.Utc).AddTicks(2588)),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ShipName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     ShipAddress = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
@@ -498,26 +537,27 @@ namespace MetaSolution.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AttributeValueLanguage",
+                name: "AttributeValueLanguages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Value = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AttributeValueId = table.Column<int>(type: "int", nullable: false),
                     LanguageCode = table.Column<string>(type: "varchar(5)", unicode: false, maxLength: 5, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AttributeValueLanguage", x => x.Id);
+                    table.PrimaryKey("PK_AttributeValueLanguages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AttributeValueLanguage_AttributeValues_AttributeValueId",
+                        name: "FK_AttributeValueLanguages_AttributeValues_AttributeValueId",
                         column: x => x.AttributeValueId,
                         principalTable: "AttributeValues",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AttributeValueLanguage_Languages_LanguageCode",
+                        name: "FK_AttributeValueLanguages_Languages_LanguageCode",
                         column: x => x.LanguageCode,
                         principalTable: "Languages",
                         principalColumn: "Code",
@@ -550,6 +590,99 @@ namespace MetaSolution.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Catalogs",
+                columns: new[] { "Id", "IsShowOnHome", "ParentId", "SortOrder", "Status" },
+                values: new object[,]
+                {
+                    { 1, true, null, 1, 1 },
+                    { 2, true, null, 1, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Configs",
+                columns: new[] { "Id", "Key", "Value" },
+                values: new object[,]
+                {
+                    { 1, "HomeTitle", "This is homepage of Meta Solution" },
+                    { 2, "HomeKeyword", "This is keyword of Meta Solution" },
+                    { 3, "HomeDescription", "This is description of Meta Solution" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Languages",
+                columns: new[] { "Code", "Description", "IsDefault", "Name" },
+                values: new object[,]
+                {
+                    { "en-US", null, false, "English" },
+                    { "vi-VN", null, false, "Tiếng Việt" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Modules",
+                columns: new[] { "Id", "Code", "Level", "Order", "ParentId" },
+                values: new object[,]
+                {
+                    { 1, "groups", 1, 1, null },
+                    { 2, "users", 1, 2, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "DateCreated", "DateModified", "Price", "PromotionPrice", "UserCreated", "UserModified", "ViewCount", "Warranty" },
+                values: new object[] { 1, new DateTime(2022, 10, 14, 3, 15, 42, 273, DateTimeKind.Utc).AddTicks(2888), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 12000000m, 10500000m, "admin (hoaidq@gmail.com)", null, 0, 12 });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
+                values: new object[] { new Guid("75f218bb-7f54-4276-83d2-61a97077f66b"), "597437f0-a9a2-40db-840c-dc571d0f1eb5", "Administrator Role", "Administrator", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("6ebfc0b1-b951-4a1d-8b76-8acbe45ecd0e"), 0, "b389861d-77da-4eb4-82a5-97cfe1d401e7", new DateTime(1981, 2, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "hoaidq@gmail.com", true, "Hoai", "Dương", false, null, "hoaidq@gmail.com", null, "AQAAAAEAACcQAAAAEDsPtg392iG8vJfkVYryhQ0Karw+k8VZWyqLiLQFZwi+GBuHVqJ1zF8YS9Mulehj9g==", null, false, "", false, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "CatalogLanguages",
+                columns: new[] { "Id", "CatalogId", "LanguageCode", "MetaAlias", "MetaDescription", "MetaKeywords", "Title", "TitleSite" },
+                values: new object[,]
+                {
+                    { 1, 1, "vi-VN", "dien-thoai", "Điện thoại di động", "điện thoại, điện thoại di động", "Điện thoại", "Điện thoại di động" },
+                    { 2, 1, "en-US", "mobile-phone", "mobile phone", "mobile phone", "Phone", "Mobile phone" },
+                    { 3, 2, "vi-VN", "phu-kien", "phụ kiện di động", "phụ kiện, phụ kiện di động", "Phụ kiện", "Phụ kiện di động" },
+                    { 4, 2, "en-US", "mobile-accessory", "mobile accessory", "mobile accessory", "Accessory", "Mobile accessory" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ModuleLanguages",
+                columns: new[] { "Id", "Description", "LanguageCode", "ModuleId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "", "vi-VN", 1, "Quản lý nhóm" },
+                    { 2, "", "en-US", 1, "Group manager" },
+                    { 3, "", "vi-VN", 2, "Quản lý thành viên" },
+                    { 4, "", "en-US", 2, "Member manager" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProductInCatalogs",
+                columns: new[] { "CatalogId", "ProductId" },
+                values: new object[] { 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "ProductLanguages",
+                columns: new[] { "Id", "Content", "Description", "LanguageCode", "MetaDescription", "MetaKeywords", "ProductId", "Title", "TitleSite" },
+                values: new object[,]
+                {
+                    { 1, "", "", "vi-VN", "", "Điện thoại iPhone XS Max 64GB", 1, "Điện thoại iPhone XS Max 64GB", "Điện thoại iPhone XS Max 64GB" },
+                    { 2, "", "", "en-US", "", "iPhone XS Max 64GB", 1, "iPhone XS Max 64GB", "iPhone XS Max 64GB" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserInRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { new Guid("75f218bb-7f54-4276-83d2-61a97077f66b"), new Guid("6ebfc0b1-b951-4a1d-8b76-8acbe45ecd0e") });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ActionInModules_ActionId",
                 table: "ActionInModules",
@@ -561,13 +694,13 @@ namespace MetaSolution.Data.Migrations
                 column: "AttributeValueId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttributeValueLanguage_AttributeValueId",
-                table: "AttributeValueLanguage",
+                name: "IX_AttributeValueLanguages_AttributeValueId",
+                table: "AttributeValueLanguages",
                 column: "AttributeValueId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AttributeValueLanguage_LanguageCode",
-                table: "AttributeValueLanguage",
+                name: "IX_AttributeValueLanguages_LanguageCode",
+                table: "AttributeValueLanguages",
                 column: "LanguageCode");
 
             migrationBuilder.CreateIndex(
@@ -594,6 +727,16 @@ namespace MetaSolution.Data.Migrations
                 name: "IX_CatalogLanguages_LanguageCode",
                 table: "CatalogLanguages",
                 column: "LanguageCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleLanguages_LanguageCode",
+                table: "ModuleLanguages",
+                column: "LanguageCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModuleLanguages_ModuleId",
+                table: "ModuleLanguages",
+                column: "ModuleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_ProductId",
@@ -650,13 +793,19 @@ namespace MetaSolution.Data.Migrations
                 name: "AttributeValueInProducts");
 
             migrationBuilder.DropTable(
-                name: "AttributeValueLanguage");
+                name: "AttributeValueLanguages");
 
             migrationBuilder.DropTable(
                 name: "Carts");
 
             migrationBuilder.DropTable(
                 name: "CatalogLanguages");
+
+            migrationBuilder.DropTable(
+                name: "Configs");
+
+            migrationBuilder.DropTable(
+                name: "ModuleLanguages");
 
             migrationBuilder.DropTable(
                 name: "OrderDetails");

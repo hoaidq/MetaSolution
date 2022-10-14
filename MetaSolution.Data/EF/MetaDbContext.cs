@@ -55,6 +55,8 @@ namespace MetaSolution.Data.EF
 
             modelBuilder.ApplyConfiguration(new ModuleConfiguration());
 
+            modelBuilder.ApplyConfiguration(new ModuleLanguageConfiguration());
+
             modelBuilder.ApplyConfiguration(new ActionConfiguration());
 
             modelBuilder.ApplyConfiguration(new ActionInModuleConfiguration());
@@ -92,6 +94,7 @@ namespace MetaSolution.Data.EF
         public DbSet<Role>? Roles { get; set; }
         public DbSet<UserInRole>? UserInRoles { get; set; }
         public DbSet<Module>? Modules { get; set; }
+        public DbSet<ModuleLanguage>? ModuleLanguages { get; set; }
         public DbSet<Action>? Actions { get; set; }
         public DbSet<ActionInModule>? ActionsInModules { get; set; }
         public DbSet<Permission>? Permissions { get; set; }

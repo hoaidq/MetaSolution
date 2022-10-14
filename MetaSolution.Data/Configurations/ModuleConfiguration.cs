@@ -14,11 +14,7 @@ namespace MetaSolution.Data.Configurations
 
             builder.Property(x => x.Id).UseIdentityColumn();
 
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(128);
-
             builder.Property(x => x.Code).IsRequired().IsUnicode(false).HasMaxLength(64);
-
-            builder.Property(x => x.Description).HasMaxLength(256);
         }
     }
 }

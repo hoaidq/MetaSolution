@@ -13,9 +13,10 @@ namespace MetaSolution.Data.Entities
         public string? TitleSite { get; set; }
         public string? MetaKeywords { get; set; }
         public string? MetaDescription { get; set; }
+        public string? MetaAlias { get; set; }
         public string? LanguageCode { set; get; }
-        public int CatalogId { set; get; }
         public Language? Language { get; set; }
+        public int CatalogId { set; get; }
         public Catalog? Catalog { get; set; }
     }
 }

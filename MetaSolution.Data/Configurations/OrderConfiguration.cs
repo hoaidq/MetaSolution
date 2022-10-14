@@ -26,6 +26,8 @@ namespace MetaSolution.Data.Configurations
             builder.Property(x => x.ShipPhoneNumber).IsRequired().HasMaxLength(20);
 
             builder.Property(x => x.Status).HasDefaultValue(OrderStatus.InProgress);
+
+            builder.HasOne(x => x.User).WithMany(x => x.Orders).HasForeignKey(x => x.UserId);
         }
     }
 }

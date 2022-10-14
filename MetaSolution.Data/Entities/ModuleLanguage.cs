@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MetaSolution.Data.Entities
 {
-    public class AttributeValueLanguage
+    public class ModuleLanguage
     {
         public int Id { get; set; }
-        public string? Value { get; set; }
+        public string? Name { get; set; }
         public string? Description { get; set; }
-        public int AttributeValueId { get; set; }
-        public string? LanguageCode { get; set; }
-        public AttributeValue? AttributeValue { get; set; }
+        public string? LanguageCode { set; get; }
         public Language? Language { get; set; }
+        public int ModuleId { set; get; }
+        public Module? Module { get; set; }
     }
 }

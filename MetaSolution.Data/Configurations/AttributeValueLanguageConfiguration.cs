@@ -8,7 +8,7 @@ namespace MetaSolution.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<AttributeValueLanguage> builder)
         {
-            builder.ToTable("AttributeValueLanguage");
+            builder.ToTable("AttributeValueLanguages");
 
             builder.HasKey(x => x.Id);
 
