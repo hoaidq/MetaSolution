@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Attribute = MetaSolution.Data.Entities.Attribute;
 using Action = MetaSolution.Data.Entities.Action;
 using MetaSolution.Data.Extensions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace MetaSolution.Data.EF
 {
-    public class MetaDbContext : DbContext
+    public class MetaDbContext : IdentityDbContext<User, Role, Guid>
     {
         public MetaDbContext(DbContextOptions options) : base(options)
         {
@@ -51,7 +52,7 @@ namespace MetaSolution.Data.EF
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
-            modelBuilder.ApplyConfiguration(new UserInRoleConfiguration());
+            //modelBuilder.ApplyConfiguration(new UserInRoleConfiguration());
 
             modelBuilder.ApplyConfiguration(new ModuleConfiguration());
 
@@ -63,40 +64,41 @@ namespace MetaSolution.Data.EF
 
             modelBuilder.ApplyConfiguration(new PermissionConfiguration());
 
-            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaim");
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
 
-            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogin").HasKey(x => x.UserId);
+            modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("UserInRoles").HasKey(x => new { x.UserId, x.RoleId });
 
-            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserToken").HasKey(x => x.UserId);
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins").HasKey(x => x.UserId);
 
-            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaim");
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens").HasKey(x => x.UserId);
+
+            modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
 
             //Data seeding
             modelBuilder.Seed();
         }
 
-        public DbSet<Config>? Configs { get; set; }
-        public DbSet<Catalog>? Catalogs { get; set; }
-        public DbSet<CatalogLanguage>? CatalogLanguages { get; set; }
-        public DbSet<Product>? Products { get; set; }
-        public DbSet<ProductLanguage>? ProductLanguages { get; set; }
-        public DbSet<ProductInCatalog>? ProductInCatalogs { get; set; }
-        public DbSet<ProductMedia>? ProductImages { get; set; }
-        public DbSet<Order>? Orders { get; set; }
-        public DbSet<OrderDetail>? OrderDetails { get; set; }
-        public DbSet<Language>? Languages { get; set; }
-        public DbSet<Attribute>? Attributes { get; set; }
-        public DbSet<AttributeValue>? AttributeValues { get; set; }
-        public DbSet<AttributeValueInProduct>? AttributeValueInProducts { get; set; }
-        public DbSet<AttributeValueLanguage>? AttributeValueLanguages { get; set; }
-        public DbSet<Cart>? Carts { get; set; }
-        public DbSet<User>? Users { get; set; }
-        public DbSet<Role>? Roles { get; set; }
-        public DbSet<UserInRole>? UserInRoles { get; set; }
-        public DbSet<Module>? Modules { get; set; }
-        public DbSet<ModuleLanguage>? ModuleLanguages { get; set; }
-        public DbSet<Action>? Actions { get; set; }
-        public DbSet<ActionInModule>? ActionsInModules { get; set; }
-        public DbSet<Permission>? Permissions { get; set; }
+        public DbSet<Config> Configs { get; set; }
+        public DbSet<Catalog> Catalogs { get; set; }
+        public DbSet<CatalogLanguage> CatalogLanguages { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductLanguage> ProductLanguages { get; set; }
+        public DbSet<ProductInCatalog> ProductInCatalogs { get; set; }
+        public DbSet<ProductMedia> ProductImages { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Attribute> Attributes { get; set; }
+        public DbSet<AttributeValue> AttributeValues { get; set; }
+        public DbSet<AttributeValueInProduct> AttributeValueInProducts { get; set; }
+        public DbSet<AttributeValueLanguage> AttributeValueLanguages { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Module> Modules { get; set; }
+        public DbSet<ModuleLanguage> ModuleLanguages { get; set; }
+        public DbSet<Action> Actions { get; set; }
+        public DbSet<ActionInModule> ActionsInModules { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
     }
 }

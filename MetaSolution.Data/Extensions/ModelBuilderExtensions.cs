@@ -37,6 +37,7 @@ namespace MetaSolution.Data.Extensions
                 {
                     Id = userID,
                     UserName = "admin",
+                    NormalizedUserName = "admin",
                     Email = "hoaidq@gmail.com",
                     NormalizedEmail = "hoaidq@gmail.com",
                     EmailConfirmed = true,
@@ -48,8 +49,8 @@ namespace MetaSolution.Data.Extensions
                 }
             );
 
-            modelBuilder.Entity<UserInRole>().HasData(
-                new UserInRole
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(
+                new IdentityUserRole<Guid>
                 {
                     RoleId = roleID,
                     UserId = userID,

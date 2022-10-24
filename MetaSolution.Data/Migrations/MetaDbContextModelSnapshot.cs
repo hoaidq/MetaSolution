@@ -524,7 +524,7 @@ namespace MetaSolution.Data.Migrations
                     b.Property<DateTime>("OrderDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 10, 14, 3, 15, 42, 262, DateTimeKind.Utc).AddTicks(2588));
+                        .HasDefaultValue(new DateTime(2022, 10, 19, 8, 25, 7, 475, DateTimeKind.Utc).AddTicks(9425));
 
                     b.Property<string>("ShipAddress")
                         .IsRequired()
@@ -614,7 +614,7 @@ namespace MetaSolution.Data.Migrations
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 10, 14, 3, 15, 42, 261, DateTimeKind.Utc).AddTicks(1855));
+                        .HasDefaultValue(new DateTime(2022, 10, 19, 8, 25, 7, 474, DateTimeKind.Utc).AddTicks(6957));
 
                     b.Property<DateTime>("DateModified")
                         .HasColumnType("datetime2");
@@ -652,7 +652,7 @@ namespace MetaSolution.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2022, 10, 14, 3, 15, 42, 273, DateTimeKind.Utc).AddTicks(2888),
+                            DateCreated = new DateTime(2022, 10, 19, 8, 25, 7, 485, DateTimeKind.Utc).AddTicks(7434),
                             DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 12000000m,
                             PromotionPrice = 10500000m,
@@ -773,7 +773,7 @@ namespace MetaSolution.Data.Migrations
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 10, 14, 3, 15, 42, 262, DateTimeKind.Utc).AddTicks(1073));
+                        .HasDefaultValue(new DateTime(2022, 10, 19, 8, 25, 7, 475, DateTimeKind.Utc).AddTicks(7173));
 
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
@@ -835,7 +835,7 @@ namespace MetaSolution.Data.Migrations
                         new
                         {
                             Id = new Guid("75f218bb-7f54-4276-83d2-61a97077f66b"),
-                            ConcurrencyStamp = "597437f0-a9a2-40db-840c-dc571d0f1eb5",
+                            ConcurrencyStamp = "d2ddc838-5b23-4e37-801b-9ffe8bd8647f",
                             Description = "Administrator Role",
                             Name = "Administrator",
                             NormalizedName = "admin"
@@ -912,7 +912,7 @@ namespace MetaSolution.Data.Migrations
                         {
                             Id = new Guid("6ebfc0b1-b951-4a1d-8b76-8acbe45ecd0e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b389861d-77da-4eb4-82a5-97cfe1d401e7",
+                            ConcurrencyStamp = "88dbbcce-bab7-45ad-b018-5ed9ec7cd5a0",
                             Dob = new DateTime(1981, 2, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "hoaidq@gmail.com",
                             EmailConfirmed = true,
@@ -920,33 +920,12 @@ namespace MetaSolution.Data.Migrations
                             LastName = "Dương",
                             LockoutEnabled = false,
                             NormalizedEmail = "hoaidq@gmail.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDsPtg392iG8vJfkVYryhQ0Karw+k8VZWyqLiLQFZwi+GBuHVqJ1zF8YS9Mulehj9g==",
+                            NormalizedUserName = "admin",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDKfIvg6XyFmGIC1/IXQl48d9OKYbd1KQopp0CYUojv4XIHEmjGxGf3cF8GG5eoSiA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "admin"
-                        });
-                });
-
-            modelBuilder.Entity("MetaSolution.Data.Entities.UserInRole", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserInRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = new Guid("6ebfc0b1-b951-4a1d-8b76-8acbe45ecd0e"),
-                            RoleId = new Guid("75f218bb-7f54-4276-83d2-61a97077f66b")
                         });
                 });
 
@@ -969,7 +948,7 @@ namespace MetaSolution.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoleClaim", (string)null);
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -991,7 +970,7 @@ namespace MetaSolution.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserClaim", (string)null);
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -1011,7 +990,27 @@ namespace MetaSolution.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserLogin", (string)null);
+                    b.ToTable("UserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.ToTable("UserInRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("6ebfc0b1-b951-4a1d-8b76-8acbe45ecd0e"),
+                            RoleId = new Guid("75f218bb-7f54-4276-83d2-61a97077f66b")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -1031,7 +1030,7 @@ namespace MetaSolution.Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("UserToken", (string)null);
+                    b.ToTable("UserTokens", (string)null);
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.ActionInModule", b =>
@@ -1265,25 +1264,6 @@ namespace MetaSolution.Data.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("MetaSolution.Data.Entities.UserInRole", b =>
-                {
-                    b.HasOne("MetaSolution.Data.Entities.Role", "Role")
-                        .WithMany("UserInRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MetaSolution.Data.Entities.User", "User")
-                        .WithMany("UserInRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MetaSolution.Data.Entities.Action", b =>
                 {
                     b.Navigation("ActionInModules");
@@ -1353,8 +1333,6 @@ namespace MetaSolution.Data.Migrations
             modelBuilder.Entity("MetaSolution.Data.Entities.Role", b =>
                 {
                     b.Navigation("Permissions");
-
-                    b.Navigation("UserInRoles");
                 });
 
             modelBuilder.Entity("MetaSolution.Data.Entities.User", b =>
@@ -1362,8 +1340,6 @@ namespace MetaSolution.Data.Migrations
                     b.Navigation("Carts");
 
                     b.Navigation("Orders");
-
-                    b.Navigation("UserInRoles");
                 });
 #pragma warning restore 612, 618
         }

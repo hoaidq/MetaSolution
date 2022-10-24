@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Catalogs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MetaSolution.Data\MetaSolution.Data.csproj" />
+    <ProjectReference Include="..\MetaSolution.Utilities\MetaSolution.Utilities.csproj" />
+    <ProjectReference Include="..\MetaSolution.ViewModels\MetaSolution.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
