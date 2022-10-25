@@ -13,7 +13,7 @@ namespace MetaSolution.ViewModels.Users
         {
             RuleFor(x => x.Username).NotEmpty().WithMessage("Username is required");
             RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required")
-                .MinimumLength(6).WithMessage("Password is at least 6 characters");
+                .MinimumLength(8).WithMessage("Password is at least 8 characters");
         }
     }
 }

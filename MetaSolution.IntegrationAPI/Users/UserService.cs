@@ -1,14 +1,14 @@
 ﻿using MetaSolution.ViewModels.Common;
 using MetaSolution.ViewModels.Users;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Text;
 
-namespace MetaSolution.AppAdmin.Services
+namespace MetaSolution.IntegrationAPI.Users
 {
-	public class UserService
-	{
+    public class UserService : IUserService
+    {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -22,7 +22,6 @@ namespace MetaSolution.AppAdmin.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        [HttpGet]
         public async Task<ApiResult<string>> Login(LoginRequest request)
         {
             var json = JsonConvert.SerializeObject(request);

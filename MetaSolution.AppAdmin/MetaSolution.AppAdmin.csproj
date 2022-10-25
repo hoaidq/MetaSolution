@@ -7,10 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.10" />
+    <PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.24.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.24.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.24.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MetaSolution.IntegrationAPI\MetaSolution.IntegrationAPI.csproj" />
+    <ProjectReference Include="..\MetaSolution.Utilities\MetaSolution.Utilities.csproj" />
     <ProjectReference Include="..\MetaSolution.ViewModels\MetaSolution.ViewModels.csproj" />
   </ItemGroup>
 

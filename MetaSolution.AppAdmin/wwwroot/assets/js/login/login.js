@@ -18,13 +18,17 @@ var KTSigninGeneral = function() {
                         validators: {
 							notEmpty: {
 								message: 'Tài khoản không được để trống!'
-							}
+                            }
 						}
 					},
                     'Password': {
                         validators: {
                             notEmpty: {
                                 message: 'Mật khẩu không được để trống!'
+                            },
+                            stringLength: {
+                                message: 'Mật khẩu phải nhập ít nhất 8 characters',
+                                min: 8
                             }
                         }
                     } 
@@ -45,8 +49,6 @@ var KTSigninGeneral = function() {
 
             // Validate form
             validator.validate().then(function (status) {
-                console.log(status, "status");
-
                 if (status == 'Valid') {
                     // Show loading indication
                     submitButton.setAttribute('data-kt-indicator', 'on');
@@ -55,18 +57,39 @@ var KTSigninGeneral = function() {
                     submitButton.disabled = true;
 
                     $.ajax({
-                        url: './Services/UserService/Login',
-                        type: 'GET',
+                        url: '/Login/Index',
+                        type: 'POST',
                         data: {
-                            'Username': '123',
-                            'Password': 'abc'
+                            'Username': form.querySelector('[name="Username"]').value,
+                            'Password': form.querySelector('[name="Password"]').value,
+                            'RememberMe': true
                         },
                         dataType: 'json',
                         success: function (data) {
-                            alert('Data: ' + data);
+                            submitButton.removeAttribute('data-kt-indicator');
+                            submitButton.disabled = false;
+
+                            if (data.isSuccessed) {
+                                window.location.href = '/Home/Index';
+                            }
+                            else {
+                                Swal.fire({
+                                    text: data.message,
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    }
+                                });
+                            }
                         },
                         error: function (request, error) {
-                            alert("Request: " + JSON.stringify(request));
+                            console.log("Request: " + JSON.stringify(request));
+                        },
+                        complete: function (data) {
+                            submitButton.removeAttribute('data-kt-indicator');
+                            submitButton.disabled = false; 
                         }
                     });
 
