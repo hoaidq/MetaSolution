@@ -52,8 +52,6 @@ namespace MetaSolution.Data.EF
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
-            //modelBuilder.ApplyConfiguration(new UserInRoleConfiguration());
-
             modelBuilder.ApplyConfiguration(new ModuleConfiguration());
 
             modelBuilder.ApplyConfiguration(new ModuleLanguageConfiguration());

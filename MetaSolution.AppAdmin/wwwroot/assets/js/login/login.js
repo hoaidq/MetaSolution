@@ -27,8 +27,8 @@ var KTSigninGeneral = function() {
                                 message: 'Mật khẩu không được để trống!'
                             },
                             stringLength: {
-                                message: 'Mật khẩu phải nhập ít nhất 8 characters',
-                                min: 8
+                                message: 'Mật khẩu phải nhập ít nhất 6 characters',
+                                min: 6
                             }
                         }
                     } 
@@ -70,7 +70,7 @@ var KTSigninGeneral = function() {
                             submitButton.disabled = false;
 
                             if (data.isSuccessed) {
-                                window.location.href = '/Home/Index';
+                                window.location.href = '/';
                             }
                             else {
                                 Swal.fire({

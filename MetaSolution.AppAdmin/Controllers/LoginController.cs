@@ -24,39 +24,40 @@ namespace MetaSolution.AppAdmin.Controllers
             _configuration = configuration;
         }
 
+        [Route("/dang-nhap")]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return View();
         }
 
-        [Route("/dang-nhap")]
         [HttpPost]
-        public async Task<JsonResult> Index(LoginRequest request)
+        public async Task<IActionResult> Index(LoginRequest request)
         {
             if (!ModelState.IsValid)
                 return Json(ModelState);
 
             var result = await _userService.Login(request);
-            if (result.ResultObj == null)
+            if (result.ResultObj != null)
             {
-                ModelState.AddModelError("", result.Message);
-                return Json(result);
-            }
-            var userPrincipal = this.ValidateToken(result.ResultObj);
-            var authProperties = new AuthenticationProperties
-            {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-                IsPersistent = false
-            };
-            HttpContext.Session.SetString(SystemConstants.AppSettings.DefaultLanguageId, _configuration[SystemConstants.AppSettings.DefaultLanguageId]);
-            HttpContext.Session.SetString(SystemConstants.AppSettings.Token, result.ResultObj);
-            await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        userPrincipal,
-                        authProperties);
 
-            return Json("Aaaaaaaaaaaaaaaaaaaaaaaa");
+                var userPrincipal = this.ValidateToken(result.ResultObj);
+                var authProperties = new AuthenticationProperties
+                {
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                    IsPersistent = false
+                };
+
+                HttpContext.Session.SetString(SystemConstants.AppSettings.DefaultLanguageCode, _configuration[SystemConstants.AppSettings.DefaultLanguageCode]);
+                HttpContext.Session.SetString(SystemConstants.AppSettings.Token, result.ResultObj);
+                await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            userPrincipal,
+                            authProperties);
+            }
+
+            return Json(result);
         }
 
         private ClaimsPrincipal ValidateToken(string jwtToken)

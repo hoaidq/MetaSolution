@@ -1,4 +1,4 @@
-using FluentValidation.AspNetCore;
+using FluentValidation;
 using MetaSolution.IntegrationAPI.Users;
 using MetaSolution.ViewModels.Users;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,18 +14,25 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/User/Forbidden/";
     });
 
-builder.Services.AddControllersWithViews()
-         .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
-
-builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
 builder.Services.AddTransient<IUserService, UserService>();
+
+IMvcBuilder builder1 = builder.Services.AddRazorPages();
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+#if DEBUG
+if (environment == Environments.Development)
+{
+    builder1.AddRazorRuntimeCompilation();
+}    
+#endif
 
 var app = builder.Build();
 
@@ -45,10 +52,10 @@ app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseSession();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapRazorPages();
+app.UseEndpoints(endpoints => {
+    endpoints.MapControllerRoute("default", "{controller = Home}/{action = Index}/{id?}");
 });
 
 app.MapControllerRoute(

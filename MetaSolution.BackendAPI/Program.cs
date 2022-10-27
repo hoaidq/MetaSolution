@@ -1,5 +1,4 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using MetaSolution.Application.Products;
 using MetaSolution.Application.Users;
 using MetaSolution.Data.EF;
@@ -28,7 +27,8 @@ builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddTransient<IProductService, ProductService>();
 
-builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 
 // Add services to the container.
 builder.Services.AddControllers();
